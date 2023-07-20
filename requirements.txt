@@ -1,0 +1,24 @@
+# app
+flask
+openai
+langchain
+sentence_transformers
+chromadb==0.3.29
+tiktoken
+beautifulsoup4
+requests
+python-dotenv
+pydantic
+Flask-Pydantic
+taipy
+click
+click-spinner
+colorama
+
+# Dev/tests
+pytest
+mypy
+pylint
+tenacity
+black
+pre-commit
