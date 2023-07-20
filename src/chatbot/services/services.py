@@ -1,26 +1,25 @@
 from __future__ import annotations
-import abc
-from typing import List, Sequence
-from langchain.document_loaders import WebBaseLoader
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from .unit_of_work import VectorStoreUnitOfWork
 
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
-
-import logging
+from typing import List
 from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
+from langchain.document_loaders import WebBaseLoader
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+from .unit_of_work import VectorStoreUnitOfWork
 
 
 def query(question: str, uow: VectorStoreUnitOfWork) -> str:
     with uow:
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-        qa_chain = RetrievalQA.from_chain_type(llm, retriever=uow.vector_store.as_retriever())
+        qa_chain = RetrievalQA.from_chain_type(
+            llm, retriever=uow.vector_store.as_retriever()
+        )
         result = qa_chain({"query": question})
         return result["result"]
 
@@ -41,6 +40,7 @@ def add_to_store(documents: List[Document], unit_of_work: VectorStoreUnitOfWork)
         unit_of_work.persist()
 
 
+# pylint: disable=unused-argument, unused-variable
 def crawl(base_url: str, unit_of_work: VectorStoreUnitOfWork, **kwargs):
     # options
     timeout = kwargs.pop("timeout", 60)
@@ -64,7 +64,10 @@ def crawl(base_url: str, unit_of_work: VectorStoreUnitOfWork, **kwargs):
                     link_url = urljoin(url, link_url)
                     # Check the domain is same as original domain
                     if urlparse(link_url).netloc == base_domain:
-                        if link_url not in visited_urls and link_url not in urls_to_ignore:
+                        if (
+                            link_url not in visited_urls
+                            and link_url not in urls_to_ignore
+                        ):
                             urls_to_visit.add(link_url)
         else:
             # logging.warning(f"Error opening {url} : {response.status_code}")
@@ -76,8 +79,8 @@ def crawl(base_url: str, unit_of_work: VectorStoreUnitOfWork, **kwargs):
         yield url
         try:
             visit_url(url)
-        except requests.exceptions.RequestException as e:
-            print("Error: " + str(e))
+        except requests.exceptions.RequestException as exc:
+            print("Error: " + str(exc))
 
 
 def load_documents(url) -> List[Document]:

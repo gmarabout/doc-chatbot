@@ -1,5 +1,8 @@
-from taipy.gui import Gui
+# pylint: disable=invalid-name, redefined-outer-name
+
 from dotenv import find_dotenv, load_dotenv
+from taipy.gui import Gui
+
 from chatbot.services import services, unit_of_work
 
 # Load .env file

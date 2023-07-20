@@ -1,7 +1,8 @@
-from flask import Flask
-from pydantic import BaseModel
-from flask_pydantic import validate
 from dotenv import find_dotenv, load_dotenv
+from flask import Flask
+from flask_pydantic import validate
+from pydantic import BaseModel
+
 from chatbot.services import services, unit_of_work
 
 app = Flask(__name__)
@@ -10,7 +11,10 @@ app = Flask(__name__)
 load_dotenv(find_dotenv())
 
 
+# pylint: disable=too-few-public-methods
 class UserPrompt(BaseModel):
+    """Model for validating user input"""
+
     question: str
 
 
