@@ -22,7 +22,8 @@
             "request": "launch",
             "program": "src/chatbot/entrypoints/taipy_app.py",
             "console": "integratedTerminal",
-            "justMyCode": false
+            "justMyCode": false,
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "name": "Python: Flask",

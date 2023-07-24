@@ -60,8 +60,11 @@ def crawl(base_url: str, unit_of_work: VectorStoreUnitOfWork, **kwargs):
             soup = BeautifulSoup(response.content, "html.parser")
             for anchor in soup.find_all("a"):
                 link_url = anchor.get("href")
-                if link_url is not None and link_url != "" and "#" not in link_url:
+                if link_url is not None and link_url != "":
                     link_url = urljoin(url, link_url)
+                    # Remove internal anchor links:
+                    if "#" in link_url:
+                        link_url = link_url[: link_url.index("#")]
                     # Check the domain is same as original domain
                     if urlparse(link_url).netloc == base_domain:
                         if (
