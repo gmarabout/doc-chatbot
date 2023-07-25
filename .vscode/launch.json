@@ -11,7 +11,7 @@
             "program": "src/chatbot/entrypoints/cli.py",
             "args": [
                 "scrap",
-                "http://docs.taipy.io/en/latest"
+                "https://docs.taipy.io/en/release-2.3/"
             ],
             "console": "integratedTerminal",
             "justMyCode": true

@@ -22,3 +22,4 @@ pylint
 tenacity
 black
 pre-commit
+Jinja2

@@ -5,23 +5,45 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
-from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import WebBaseLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
 
 from .unit_of_work import VectorStoreUnitOfWork
 
 
+SYSTEM_TEMPLATE = """Use the following pieces of context to answer the users question.
+Take note of the sources and include them in the answer in the format: "SOURCES: source1 source2", use "SOURCES" in capital letters regardless of the number of sources.
+If you don't know the answer, just say that "I don't know", don't try to make up an answer.
+----------------
+{summaries}"""
+
+MESSAGES = [
+    SystemMessagePromptTemplate.from_template(SYSTEM_TEMPLATE),
+    HumanMessagePromptTemplate.from_template("{question}"),
+]
+PROMPT = ChatPromptTemplate.from_messages(MESSAGES)
+
+
 def query(question: str, uow: VectorStoreUnitOfWork) -> str:
+    chain_type_kwargs = {"prompt": PROMPT}
     with uow:
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-        qa_chain = RetrievalQA.from_chain_type(
-            llm, retriever=uow.vector_store.as_retriever()
+        chain = RetrievalQAWithSourcesChain.from_chain_type(
+            llm,
+            retriever=uow.vector_store.as_retriever(),
+            return_source_documents=True,
+            chain_type_kwargs=chain_type_kwargs,
         )
-        result = qa_chain({"query": question})
-        return result["result"]
+        result = chain(question)
+        return result["answer"]
 
 
 def split(documents: List[Document]) -> List[Document]:

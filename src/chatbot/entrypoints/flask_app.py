@@ -13,16 +13,24 @@ load_dotenv(find_dotenv())
 
 # pylint: disable=too-few-public-methods
 class UserPrompt(BaseModel):
-    """Model for validating user input"""
+    """Model for user input"""
 
     question: str
+
+
+# pylint: disable=too-few-public-methods
+class SystemResponse(BaseModel):
+    """Model for system response"""
+
+    response: str
 
 
 @app.post("/query")
 @validate()
 def query(body: UserPrompt):
     uow = unit_of_work.LocalChromaUnitOfWork()
-    return services.query(body.question, uow)
+    response = services.query(body.question, uow)
+    return SystemResponse(response=response)
 
 
 if __name__ == "__main__":

@@ -29,12 +29,13 @@ def scrap(url: str, limit: int):
                     file.write(line)
                     file.write("\n")
                     file.flush()
+    else:
+        click.echo(f"📣 Using existing {click.format_filename(b'links.txt')}...")
 
     with open(LINKS_TEMP_FILE, "r", encoding="utf8") as file:
         lines = [line.strip() for line in file.readlines()]
-        with click.progressbar(
-            lines, label=f"Scrapping from {click.format_filename(b'links.txt')}"
-        ) as progress_bar:
+        click.echo("Indexing pages. Please wait...")
+        with click.progressbar(lines) as progress_bar:
             for line in progress_bar:
                 services.scrap(line, uow)
 
