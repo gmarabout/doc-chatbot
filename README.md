@@ -9,10 +9,13 @@ It also comes with a single Taipy web page for easy testing.
 
 ### Prerequisites
 
-* Install all the requirements using `pip -r requirements.txt`.
-* This project also include some front-end code so you need a decent version of `node` installed (tested with node v16.18.0).
-* Generate the front-end build files using `python configure_web_ui.py`. This will generate both `package.json` and `webpack.config.js` with the proper Taipy directories (you need Taipy installed properly, so don't forget the vbery first satep!).
-* Last but not least, you need a OpenAI API Key. To do so, you need to register on [the OpenAI developer web site](https://platform.openai.com).
+1. Install all the requirements using `pip -r requirements.txt`.
+2. This project also include some front-end code so you need a decent version of `node` installed (tested with node v16.18.0).
+3. Generate the front-end build files using `python configure_web_ui.py`. This will generate both `package.json` and `webpack.config.js` with the proper Taipy directories (you need Taipy installed properly, so don't forget the vbery first satep!).
+4. Last but not least, you need a OpenAI API Key. To do so, you need to register on [the OpenAI developer web site](https://platform.openai.com). Put the key in a `.env` file at the root of the project. Example:
+```
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
+```
 
 You have done all those steps? You should now be good to go now :-)
 
@@ -32,7 +35,8 @@ The ChromaDB is persisted in the `chroma_db` directory.
 To better display the LLM response in the Taipy app, we provide a richer display through an encapsulation of the very cool `react-markdown` web component.
 This need to be built before using Taipy.
 
-To do so, you need to open a command prompt into the `src/tp_markdown/webui` directory and run the build `npm run build:dev` (remove the `:dev` for minified build).
+To do so, you need to open a command prompt into the `src/tp_markdown/webui` directory and run the following the build `npm run build:dev` (remove the `:dev` for minified build).
+If the build fails, it's likely because you missed the step 3 of the 'prerequisites' ;-)
 
 3. Run the Flask app
 You can run a simple Flask REST API app using `python src/chatbot/entrypoints/flask_app.py`.
