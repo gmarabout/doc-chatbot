@@ -6,13 +6,13 @@ Doc-chatbot is a toy project playing with ChatGPT and langchain.
 It provides a command to scrap an online documentation and create a Flask API to query your data.
 It also comes with a single Taipy web page for easy testing.
 
-
 ### Prerequisites
 
 1. Install all the requirements using `pip -r requirements.txt`.
 2. This project also include some front-end code so you need a decent version of `node` installed (tested with node v16.18.0).
-3. Generate the front-end build files using `python configure_web_ui.py`. This will generate both `package.json` and `webpack.config.js` with the proper Taipy directories (you need Taipy installed properly, so don't forget the vbery first satep!).
+3. Generate the front-end build files using `python configure_web_ui.py`. This will generate both `package.json` and `webpack.config.js` with the proper Taipy directories (you need Taipy installed properly, so don't forget the very first step!).
 4. Last but not least, you need a OpenAI API Key. To do so, you need to register on [the OpenAI developer web site](https://platform.openai.com). Put the key in a `.env` file at the root of the project. Example:
+
 ```
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
 ```
@@ -39,16 +39,16 @@ To do so, you need to open a command prompt into the `src/tp_markdown/webui` dir
 If the build fails, it's likely because you missed the step 3 of the 'prerequisites' ;-)
 
 3. Run the Flask app
-You can run a simple Flask REST API app using `python src/chatbot/entrypoints/flask_app.py`.
-Then you can use cURL to send queries. Example:
+   You can run a simple Flask REST API app using `python src/chatbot/entrypoints/flask_app.py`.
+   Then you can use cURL to send queries. Example:
 
-```bash
+````bash
 ➜  ~ curl -X POST http://127.0.0.1:8080/query -H 'Content-Type: application/json' -d '{"question": "Show me how to put a button into a page."}'
 
 {"response": "To put a button into a page, you can use the following Markdown syntax:\n\n```\n<|Button Text|button|>\n```\n\nHere's an example of how you can add a button to a page:\n\n```\npage=\"\"\"\n<|Button in first column|button|>\n\"\"\"\n```\n\nYou can replace \"Button Text\" with the desired text for your button. This Markdown fragment can be added to the definition of your page.\n\n(Source: https://docs.taipy.io/en/release-2.3/manuals/gui/pages/)"}%
-```
+````
 
 4. Run the Taipy app
-To run the Taipy app `python src/chatbot/entrypoints/taipy_app.py`. This will open your browser on a page where you can enter your question in the prompt.
+   To run the Taipy app `python src/chatbot/entrypoints/taipy_app.py`. This will open your browser on a page where you can enter your question in the prompt.
 
 ![Screenshot](docs/images/screenshot.png)
